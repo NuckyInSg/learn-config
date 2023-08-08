@@ -7,7 +7,12 @@ import (
 )
 
 func TestNewConfig(t *testing.T) {
-	tempFileName := os.TempDir() + "config.yaml"
+	pwd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("Can not get pwd")
+	}
+	tempFileName := pwd + "/config.yaml"
+	fmt.Println(tempFileName)
 	configContent := `
   http:
     gin_mode: debug
@@ -21,10 +26,11 @@ func TestNewConfig(t *testing.T) {
     filename: /var/log/yourname.log 
   `
 
-	err := os.WriteFile(tempFileName, []byte(configContent), 0644)
+	err = os.WriteFile(tempFileName, []byte(configContent), 0644)
 	if err != nil {
 		t.Fatalf("Cannot create temporary file: %s", err)
 	}
+	defer os.Remove(tempFileName)
 
 	t.Run("NewConfig", func(t *testing.T) {
 		oldValue := os.Getenv(configPathEnvVarName)
