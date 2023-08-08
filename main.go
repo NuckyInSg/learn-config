@@ -134,3 +134,7 @@ func newConfig() (*config, error) {
 
 	return config, nil
 }
+
+func main() {
+	fmt.Println("try git ci-cd")
+}
